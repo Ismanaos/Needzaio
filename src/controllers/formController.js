@@ -2,6 +2,7 @@ const date = require('date-and-time');
 const bcryptjs = require('bcryptjs')
 const { users, contact, userDocument, typeDocument, country_tb } = require('../data/usersFake');
 const { v1 } = require('uuid');
+const jwt = require('jsonwebtoken')
 
 const formulario = (req, res) => {
     const inputField = (name, placeholder, type) => {
@@ -9,7 +10,7 @@ const formulario = (req, res) => {
     }
     res.send(`
     <h1>Register</h1>
-    <form method='post' action='/form'>
+    <form method='post' action='/'>
         <label>Information Basic</label>
         ${inputField('Name', 'Name', '')}
         ${inputField('LastName', 'Lastname', '')}
@@ -40,6 +41,13 @@ const formulario = (req, res) => {
 
 const postUser = (req, res, next) => {
     var {Name, LastName, username, email, emailVerify, password, isMilitar, isTemporal, NameTypeDocument, Document, PlaceExpedition, DateExpedition, CountryCode, CountryName, Address, City, Phone, CelPhone, EmergencyName, EmergencyPhone} = req.body
+
+//  Token 
+    let verificationToken = jwt.sign({user: req.body}, 'secretkey', (err, token) => {
+        return token
+    })
+
+
 //  Validaciones;
     let militar = false, temporal = false
 
@@ -122,8 +130,8 @@ const postUser = (req, res, next) => {
         isTemporal,
         email,
         emailVerify,
-        password,
-        verificationToken: passHash
+        password: passHash,
+        verificationToken
     }
 
 //  Hago push a los objetos anteriormente creados
