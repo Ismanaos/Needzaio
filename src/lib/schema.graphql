@@ -1,0 +1,69 @@
+type AppUser_TB {
+    id: ID!
+    LastName: String!
+    Name: String!
+    isMilitar: Boolean!
+    TimeCreate: String!
+    isTemporal: Boolean!
+    username: String
+    password: String
+    email: String
+    emailVerified: String
+    verificationToken: String
+}
+
+type ContactInfo_TB{
+    id: ID
+    UserID: AppUser_TB!
+    Address: String
+    CountryID: Country_TB!
+    City: String
+    Phone: String
+    CelPhone: String
+    EmergencyName: String
+    EmergencyPhone: String
+}
+
+type Country_TB{
+    id: ID
+    CountryCode: String
+    CountryName: String
+}
+
+type UserDocument{
+    UserID: AppUser_TB!
+    Document: String
+    TypeDocument: TypeDocument_TB!
+    PlaceExpedition: String
+    DateExpedition: String
+}
+
+type TypeDocument_TB{
+    id: ID
+    NameTypeDocument: String
+}
+
+type Query{
+    "Devuelve los usuarios registrados"
+    getUsers: [AppUser_TB]
+    "Devuelve todos los ContactInfo registrados"
+    getContact: [ContactInfo_TB]
+    "Devuelve todos los documentos registrados"
+    getDocument: [UserDocument]
+}
+
+type Mutation {
+    "Crear un usuario"
+    createUser(
+        LastName: String!
+        Name: String!
+        IsMilitar: Boolean!
+        isTemporal: Boolean!
+        TimeCreate: String,
+        username: String
+        password: String
+        email: String
+        emailVerified: String
+        verificationToken: String
+    ): AppUser_TB
+}
